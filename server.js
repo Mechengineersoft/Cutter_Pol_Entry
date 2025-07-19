@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 const sheets = google.sheets('v4');
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 const spreadsheetId = '1aJEVYDgVxhXVpOZrc8-JvHtwDXrX3v77jNZwPOad0vY';
-const sheetName = 'Data';
+const sheetName = 'CutterData';
 
 const auth = new google.auth.GoogleAuth({
     keyFile: 'credentials.json', // Path to your JSON key file
