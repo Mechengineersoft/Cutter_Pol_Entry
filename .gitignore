@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Credentials
+credentials.json
+
+# IDE files
+.vscode/
+.idea/
+
+# Local Netlify folder
+.netlify
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System Files
+.DS_Store
+Thumbs.db
