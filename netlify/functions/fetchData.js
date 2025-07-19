@@ -2,7 +2,7 @@ const { google } = require('googleapis');
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 const spreadsheetId = '1aJEVYDgVxhXVpOZrc8-JvHtwDXrX3v77jNZwPOad0vY';
-const sheetName = 'Data';
+const sheetName = 'CutterData';
 
 const auth = new google.auth.GoogleAuth({
   credentials: {
