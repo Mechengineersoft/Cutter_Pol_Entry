@@ -36,14 +36,16 @@ const auth = new google.auth.GoogleAuth({
 
 exports.handler = async (event, context) => {
   // Enable CORS
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  };
+
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      },
+      headers,
       body: '',
     };
   }
@@ -51,6 +53,7 @@ exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ error: 'Method not allowed' }),
     };
   }
@@ -62,6 +65,7 @@ exports.handler = async (event, context) => {
     if (!data.date || !data.mc || !data.operator || !Array.isArray(data.blocks) || data.blocks.length === 0) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ error: 'Missing required fields' }),
       };
     }
@@ -98,9 +102,7 @@ exports.handler = async (event, context) => {
 
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
+      headers,
       body: JSON.stringify({
         message: 'Data added successfully',
         updatedRows: response.data.updates.updatedRows,
@@ -132,7 +134,7 @@ exports.handler = async (event, context) => {
     if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT') {
       return {
         statusCode: 503,
-        headers: { 'Access-Control-Allow-Origin': '*' },
+        headers,
         body: JSON.stringify({
           error: 'Service temporarily unavailable',
           details: 'Unable to connect to Google Sheets API'
@@ -143,7 +145,7 @@ exports.handler = async (event, context) => {
     if (error.message.includes('invalid_grant') || error.message.includes('unauthorized')) {
       return {
         statusCode: 401,
-        headers: { 'Access-Control-Allow-Origin': '*' },
+        headers,
         body: JSON.stringify({
           error: 'Authentication failed',
           details: 'Invalid or expired credentials'
@@ -153,9 +155,7 @@ exports.handler = async (event, context) => {
     
     return {
       statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
+      headers,
       body: JSON.stringify({
         error: 'Internal server error',
         details: error.message,
