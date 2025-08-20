@@ -4,7 +4,9 @@
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "# no build step needed",
+    "dev": "netlify dev"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +16,11 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "googleapis": "^153.0.0"
+    "googleapis": "^153.0.0",
+    "@netlify/functions": "^2.0.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
   },
   "description": ""
 }

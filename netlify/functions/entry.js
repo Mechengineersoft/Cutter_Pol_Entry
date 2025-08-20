@@ -4,6 +4,20 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const spreadsheetId = '1aJEVYDgVxhXVpOZrc8-JvHtwDXrX3v77jNZwPOad0vY';
 const sheetName = 'HP';
 
+// Validate environment variables
+const requiredEnvVars = [
+  'GOOGLE_PRIVATE_KEY_ID',
+  'GOOGLE_PRIVATE_KEY',
+  'GOOGLE_CLIENT_EMAIL',
+  'GOOGLE_CLIENT_ID',
+  'GOOGLE_CLIENT_X509_CERT_URL'
+];
+
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+if (missingEnvVars.length > 0) {
+  throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+}
+
 const auth = new google.auth.GoogleAuth({
   credentials: {
     type: 'service_account',
@@ -93,9 +107,9 @@ exports.handler = async (event, context) => {
       }),
     };
   } catch (error) {
-    console.error('Error details:', {
+    // Log detailed error information
+    const errorDetails = {
       message: error.message,
-      stack: error.stack,
       name: error.name,
       code: error.code,
       credentials: {
@@ -105,7 +119,37 @@ exports.handler = async (event, context) => {
         hasClientId: !!process.env.GOOGLE_CLIENT_ID,
         hasClientX509: !!process.env.GOOGLE_CLIENT_X509_CERT_URL
       }
-    });
+    };
+    
+    // Include stack trace only in development
+    if (process.env.NODE_ENV !== 'production') {
+      errorDetails.stack = error.stack;
+    }
+    
+    console.error('Error details:', errorDetails);
+    
+    // Check for specific error types
+    if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT') {
+      return {
+        statusCode: 503,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({
+          error: 'Service temporarily unavailable',
+          details: 'Unable to connect to Google Sheets API'
+        })
+      };
+    }
+    
+    if (error.message.includes('invalid_grant') || error.message.includes('unauthorized')) {
+      return {
+        statusCode: 401,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({
+          error: 'Authentication failed',
+          details: 'Invalid or expired credentials'
+        })
+      };
+    }
     
     return {
       statusCode: 500,
