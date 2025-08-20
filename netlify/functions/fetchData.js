@@ -21,7 +21,31 @@ const auth = new google.auth.GoogleAuth({
 });
 
 exports.handler = async (event, context) => {
-  const { blockNo, partNo, thickness } = event.queryStringParameters;
+  // Enable CORS
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  };
+
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: '',
+    };
+  }
+
+  const { blockNo, partNo, thickness } = event.queryStringParameters || {};
+
+  // Return empty array if no blockNo provided
+  if (!blockNo) {
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify([]),
+    };
+  }
 
   try {
     const authClient = await auth.getClient();
@@ -44,11 +68,13 @@ exports.handler = async (event, context) => {
 
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify(filteredData),
     };
   } catch (error) {
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ error: 'Internal Server Error' }),
     };
   }

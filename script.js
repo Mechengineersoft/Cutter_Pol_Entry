@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const loaderElement = document.querySelector('.app-loader');
         // Test connection with a simple request that should return empty array for non-existent block
-        const response = await fetch(`${API_ENDPOINT}?blockNo=__test__`, {
+        const testUrl = isNetlify ? `${API_ENDPOINT}?blockNo=__test__` : `${API_ENDPOINT}?blockNo=__test__`;
+        const response = await fetch(testUrl, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'
@@ -48,10 +49,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// API endpoint configuration
-const BASE_API_ENDPOINT = '/api';
-const API_ENDPOINT = `${BASE_API_ENDPOINT}/data`;
-const ENTRY_ENDPOINT = `${BASE_API_ENDPOINT}/entry`;
+// API endpoint configuration - detect environment
+const isNetlify = window.location.hostname.includes('netlify.app') || window.location.hostname.includes('netlify.com');
+const BASE_API_ENDPOINT = isNetlify ? '/.netlify/functions' : '/api';
+const API_ENDPOINT = isNetlify ? '/.netlify/functions/fetchData' : '/api/data';
+const ENTRY_ENDPOINT = isNetlify ? '/.netlify/functions/entry' : '/api/entry';
 
 // Search Data function
 async function searchData() {
