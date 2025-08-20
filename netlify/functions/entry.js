@@ -93,7 +93,20 @@ exports.handler = async (event, context) => {
       }),
     };
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code,
+      credentials: {
+        hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
+        hasPrivateKeyId: !!process.env.GOOGLE_PRIVATE_KEY_ID,
+        hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
+        hasClientId: !!process.env.GOOGLE_CLIENT_ID,
+        hasClientX509: !!process.env.GOOGLE_CLIENT_X509_CERT_URL
+      }
+    });
+    
     return {
       statusCode: 500,
       headers: {
@@ -102,6 +115,8 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({
         error: 'Internal server error',
         details: error.message,
+        type: error.name,
+        code: error.code
       }),
     };
   }
