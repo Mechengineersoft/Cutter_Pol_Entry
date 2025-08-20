@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // API endpoint configuration
-const BASE_API_ENDPOINT = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/.netlify/functions';
-const API_ENDPOINT = `${BASE_API_ENDPOINT}/fetchData`;
+const BASE_API_ENDPOINT = '/api';
+const API_ENDPOINT = `${BASE_API_ENDPOINT}/data`;
 const ENTRY_ENDPOINT = `${BASE_API_ENDPOINT}/entry`;
 
 // Search Data function

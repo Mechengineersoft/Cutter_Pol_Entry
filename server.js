@@ -3,7 +3,7 @@ require('dotenv').config(); // Add this line at the top
 const express = require('express');
 const { google } = require('googleapis');
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 5000;
 const cors = require('cors');
 const path = require('path');
 
