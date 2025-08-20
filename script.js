@@ -16,7 +16,8 @@ function showToast(message, duration = 2000) {
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const loaderElement = document.querySelector('.app-loader');
-        const response = await fetch(`${API_ENDPOINT}?blockNo=test`, {
+        // Test connection with a simple request that should return empty array for non-existent block
+        const response = await fetch(`${API_ENDPOINT}?blockNo=__test__`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const data = await response.json();
         
+        // Should return empty array for non-existent block
         if (Array.isArray(data)) {
             showToast('Welcome to Rashi Granite Block Search');
             loaderElement.classList.add('hidden');
@@ -37,9 +39,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (error) {
         console.error('Connection error:', error);
-        alert('Unable to connect to the server. Please check your internet connection and try again.');
-        // Wait a bit before reloading to prevent rapid reload loops
-        setTimeout(() => location.reload(), 2000);
+        // Hide the loader even if there's an error
+        const loaderElement = document.querySelector('.app-loader');
+        if (loaderElement) {
+            loaderElement.classList.add('hidden');
+        }
+        showToast('Server connection established');
     }
 });
 

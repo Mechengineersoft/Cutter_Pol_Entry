@@ -34,6 +34,11 @@ const auth = new google.auth.GoogleAuth({
 app.get('/api/data', async (req, res) => {
     const { blockNo, partNo, thickness } = req.query;
 
+    // Return empty array if no blockNo provided
+    if (!blockNo) {
+        return res.json([]);
+    }
+
     try {
         const authClient = await auth.getClient();
         const response = await sheets.spreadsheets.values.get({
@@ -42,7 +47,7 @@ app.get('/api/data', async (req, res) => {
             range: `${sheetName}!A:W`,
         });
 
-        const rows = response.data.values;
+        const rows = response.data.values || [];
         let filteredData = rows.filter(row => row[0] && row[0].toLowerCase() === blockNo.toLowerCase());
 
         if (partNo) {
@@ -54,7 +59,8 @@ app.get('/api/data', async (req, res) => {
 
         res.json(filteredData);
     } catch (error) {
-        res.status(500).send(error);
+        console.error('API Error:', error);
+        res.status(500).json({ error: 'Failed to fetch data', details: error.message });
     }
 });
 
