@@ -3,7 +3,7 @@ require('dotenv').config(); // Add this line at the top
 const express = require('express');
 const { google } = require('googleapis');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 5000;
 const cors = require('cors');
 const path = require('path');
 
@@ -118,6 +118,6 @@ app.post('/api/entry', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running at http://0.0.0.0:${port}`);
 });

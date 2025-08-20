@@ -8,9 +8,8 @@ channel = "stable-25_05"
 run = ["sh", "-c", "npm run dev"]
 
 [[ports]]
-localPort = 3999
-externalPort = 3000
-exposeLocalhost = true
+localPort = 5000
+externalPort = 80
 
 [[ports]]
 localPort = 8888
@@ -23,3 +22,15 @@ externalPort = 3002
 [[ports]]
 localPort = 46511
 externalPort = 80
+
+[workflows]
+runButton = "Express Server"
+
+[[workflows.workflow]]
+name = "Express Server"
+author = 26705049
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node server.js"
