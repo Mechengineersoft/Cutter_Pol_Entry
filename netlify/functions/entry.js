@@ -13,9 +13,22 @@ const requiredEnvVars = [
   'GOOGLE_CLIENT_X509_CERT_URL'
 ];
 
+// Check for missing environment variables
 const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
 if (missingEnvVars.length > 0) {
+  console.error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
   throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+}
+
+// Log environment variable lengths to help diagnose issues
+console.log('Environment variable lengths:');
+requiredEnvVars.forEach(varName => {
+  console.log(`${varName}: ${process.env[varName] ? process.env[varName].length : 0} characters`);
+});
+
+// Check if private key is properly formatted
+if (process.env.GOOGLE_PRIVATE_KEY && !process.env.GOOGLE_PRIVATE_KEY.includes('\n')) {
+  console.warn('GOOGLE_PRIVATE_KEY does not contain newline characters. This may cause issues.');
 }
 
 const auth = new google.auth.GoogleAuth({

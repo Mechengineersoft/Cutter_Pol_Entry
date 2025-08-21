@@ -4,6 +4,28 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 const spreadsheetId = '1aJEVYDgVxhXVpOZrc8-JvHtwDXrX3v77jNZwPOad0vY';
 const sheetName = 'CutterData';
 
+// Validate environment variables
+const requiredEnvVars = [
+  'GOOGLE_PRIVATE_KEY_ID',
+  'GOOGLE_PRIVATE_KEY',
+  'GOOGLE_CLIENT_EMAIL',
+  'GOOGLE_CLIENT_ID',
+  'GOOGLE_CLIENT_X509_CERT_URL'
+];
+
+// Check for missing environment variables
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+if (missingEnvVars.length > 0) {
+  console.error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+  throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+}
+
+// Log environment variable lengths to help diagnose issues
+console.log('Environment variable lengths:');
+requiredEnvVars.forEach(varName => {
+  console.log(`${varName}: ${process.env[varName] ? process.env[varName].length : 0} characters`);
+});
+
 const auth = new google.auth.GoogleAuth({
   credentials: {
     type: 'service_account',
