@@ -26,6 +26,7 @@ requiredEnvVars.forEach(varName => {
   console.log(`${varName}: ${process.env[varName] ? process.env[varName].length : 0} characters`);
 });
 
+// Initialize auth with GoogleAuth
 const auth = new google.auth.GoogleAuth({
   credentials: {
     type: 'service_account',

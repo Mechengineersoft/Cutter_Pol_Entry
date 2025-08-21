@@ -1,0 +1,5 @@
+Testing Google Sheets API connection...
+Successfully authenticated with Google API
+Successfully connected to Google Sheets API
+Spreadsheet title: Website2
+✅ Test completed successfully
